@@ -1,3 +1,18 @@
+
+  function connect(){
+    $("#connect_page").addClass("hidden");
+    $("#scan_page").removeClass("hidden");
+  }
+
+$( document ).ready(function() {
+
+  connect_btn = document.getElementById('connect_btn');
+  connect_btn.addEventListener('click', function(ev){
+    connect();
+    ev.preventDefault();
+  }, false);
+});
+
 (function() {
   // The width and height of the captured photo. We will set the
   // width to the value defined here, but the height will be
