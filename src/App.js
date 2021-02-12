@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import CustomGrid from './components/CustomGrid.js';
 
 function App() {

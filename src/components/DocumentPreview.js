@@ -5,11 +5,12 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import Doc from '../assests/images/file1.jpg';
-import SaveIcon from '@material-ui/icons/Save';
+
 
 const useStyles = makeStyles({
-  root: {
+  root: { 
       maxWidth : '700px',
       margin : 'auto',
       marginTop : '1vh',
@@ -34,7 +35,6 @@ export default function MediaCard() {
         <CardMedia
           className={classes.media}
           image={Doc}
-          title="Contemplative Reptile"
         />
       </CardActionArea>
       <CardActions>
@@ -43,7 +43,7 @@ export default function MediaCard() {
         color="primary"
         size="large"
         className={classes.button}
-        startIcon={<SaveIcon />}
+        startIcon={<GetAppIcon />}
       >
         Save
       </Button>
