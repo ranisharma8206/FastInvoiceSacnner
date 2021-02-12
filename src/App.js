@@ -1,10 +1,9 @@
 import logo from './logo.svg';
+import CustomGrid from './components/CustomGrid.js';
 
 function App() {
   return (
-    <div >
-      <h1>Hello</h1>
-    </div>
+    <CustomGrid></CustomGrid>
   );
 }
 
