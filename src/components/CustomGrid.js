@@ -10,16 +10,16 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function CenteredGrid() {
+export default function CenteredGrid(props) {
   const classes = useStyles();
 
   return (
     <Grid container className={classes.root}>
       <Grid item xs={12} lg={8}>
-        <DocumentPreview></DocumentPreview>
+        <DocumentPreview selDoc={props.selDoc}></DocumentPreview>
       </Grid>
       <Grid item xs={12} lg={4}>
-        <RightSideBar></RightSideBar>
+        <RightSideBar uda={props.uda} setSelDoc={props.setSelDoc}></RightSideBar>
       </Grid>
     </Grid>
   );

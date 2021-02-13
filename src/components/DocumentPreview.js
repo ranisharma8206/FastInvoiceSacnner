@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function MediaCard() {
+export default function DocumentPreview(props) {
   const classes = useStyles();
 
   return (
@@ -34,7 +34,7 @@ export default function MediaCard() {
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image={Doc}
+          image={props.selDoc.documentUrl}
         />
       </CardActionArea>
       <CardActions>

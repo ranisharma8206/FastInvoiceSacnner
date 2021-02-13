@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function InteractiveList() {
+export default function InteractiveList(props) {
   const classes = useStyles();
 
   return (
@@ -31,7 +31,7 @@ export default function InteractiveList() {
       <Grid container justify="center" className={classes.uploadedDocumentlist}>
         <Grid item xs={12} md={ 11}>
           <div className={classes.demo}>
-            <UploadedDocumentList></UploadedDocumentList>
+            <UploadedDocumentList uda={props.uda} setSelDoc={props.setSelDoc}></UploadedDocumentList>
           </div>
         </Grid>
         <Button

@@ -18,17 +18,19 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function UploadedDocumentItem() {
+export default function UploadedDocumentItem(props) {
   const classes = useStyles();
   return (
     <ListItem>
         <ListItemAvatar>
         <Avatar>
+          <IconButton onClick={() => {props.setSelDoc(props.doc)}}>
             <FolderIcon />
+          </IconButton>
         </Avatar>
         </ListItemAvatar>
         <InputBase
-        defaultValue="Document"
+        defaultValue={props.name}
         inputProps={{ 'aria-label': 'naked' }}
       />
         <ListItemSecondaryAction>
