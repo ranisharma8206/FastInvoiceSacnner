@@ -1,8 +1,9 @@
+var imageData = undefined;
 
-  function connect(){
-    $("#connect_page").addClass("hidden");
-    $("#scan_page").removeClass("hidden");
-  }
+function connect(){
+  $("#connect_page").addClass("hidden");
+  $("#scan_page").removeClass("hidden");
+}
 
 $( document ).ready(function() {
 
@@ -87,8 +88,27 @@ $( document ).ready(function() {
     $(output).addClass("hidden");
     $(camera).removeClass("hidden");
   }
+  function sendData(){
+    console.log(imageData);
+    const data = { clientId: 1234, base64Image:imageData };
+    fetch('http://10.3.0.104:5000/api/uploadImage', {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  }
 
   proceed_btn.addEventListener('click', function(ev){
+    sendData();
     back();
     ev.preventDefault();
   }, false);
@@ -125,6 +145,7 @@ $( document ).ready(function() {
       context.drawImage(video, 0, 0, width, height);
     
       var data = canvas.toDataURL('image/png');
+      imageData = data;
       $(output).removeClass("hidden");
       $(camera).addClass("hidden");
       photo.setAttribute('src', data);
