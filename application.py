@@ -5,7 +5,7 @@ import string
 import random
 from flask_socketio import SocketIO
 from flask_cors import CORS, cross_origin
-
+from docScanner.scan import DocScanner
 
 
 socketMapping = [0 for i in range(100)]
@@ -14,6 +14,7 @@ currentUID = 1
 app = Flask(__name__)
 # cors = CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
+docscanner = DocScanner()
 
 
 
@@ -37,6 +38,7 @@ def saveImage(imageData):
     return filename
 
 def enhance(inPath, outPath):
+    docscanner.scan(inPath, outPath)
     return True
 
 @app.route('/')
@@ -55,7 +57,7 @@ def uploadImage():
     clientId=jsonObject['clientId']
     base64Image=jsonObject['base64Image']
     filename = saveImage(base64Image)
-    outFilePath = 'static/assets/raw/'+filename+'.png'
+    outFilePath = 'static/assets/final/'+filename+'.png'
     enhance('static/assets/raw/'+filename+'.png',outFilePath)
 
     jsonString = '{"id":"'+filename+'","url":"'+outFilePath+'","name":"'+filename+'"}'
