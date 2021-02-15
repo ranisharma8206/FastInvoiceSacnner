@@ -4,11 +4,15 @@ import urllib
 import string
 import random
 from flask_socketio import SocketIO
+from flask_cors import CORS, cross_origin
 
-socketMapping = []
+
+
+socketMapping = [0 for i in range(100)]
 currentUID = 1
 
 app = Flask(__name__)
+# cors = CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 
@@ -18,8 +22,7 @@ def handle_connect():
     print('Client connected')
     global currentUID
     currentUID = currentUID + 1
-    mapping = {"room_id" : request.sid, "UID" : currentUID}
-    socketMapping.append(mapping)
+    socketMapping[currentUID] = request.sid
     socketio.emit('uid',currentUID)
     print(socketMapping)
 
@@ -48,11 +51,16 @@ def scanner():
 @app.route('/api/uploadImage', methods = ['POST'])
 def uploadImage():
     jsonObject=request.json
+    
     clientId=jsonObject['clientId']
     base64Image=jsonObject['base64Image']
     filename = saveImage(base64Image)
-    outFilePath = 'static/assets/final/'+filename
-    enhance('static/assets/raw/'+filename,outFilePath)
+    outFilePath = 'static/assets/raw/'+filename+'.png'
+    enhance('static/assets/raw/'+filename+'.png',outFilePath)
+
+    jsonString = '{"id":"'+filename+'","url":"'+outFilePath+'","name":"'+filename+'"}'
+    print(clientId)
+    socketio.emit('documentUpload',jsonString, room=socketMapping[int(clientId)])
 
     retData={"message" : "success"}
     return jsonify(retData)

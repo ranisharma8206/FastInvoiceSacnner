@@ -1,6 +1,7 @@
 var imageData = undefined;
-
+var clientID = 0;
 function connect(){
+  clientID = $("#addr").val()
   $("#connect_page").addClass("hidden");
   $("#scan_page").removeClass("hidden");
 }
@@ -90,9 +91,11 @@ $( document ).ready(function() {
   }
   function sendData(){
     console.log(imageData);
-    const data = { clientId: 1234, base64Image:imageData };
+    const data = { clientId: clientID, base64Image:imageData };
+    console.log(data)
     fetch('http://10.3.0.104:5000/api/uploadImage', {
       method: 'POST', // or 'PUT'
+      // mode:'no-cors',
       headers: {
         'Content-Type': 'application/json',
       },
