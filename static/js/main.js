@@ -35,7 +35,7 @@ $( document ).ready(function() {
   var canvas = null;
   var photo = null;
   var startbutton = null;
-
+  var imageCapture = null;
   function startup() {
     video = document.getElementById('video');
     canvas = document.getElementById('canvas');
@@ -47,40 +47,76 @@ $( document ).ready(function() {
     proceed_btn = document.getElementById('proceed_btn');
     
 
-    navigator.mediaDevices.getUserMedia({video: {facingMode : 'environment'} , audio: false})
-    .then(function(stream) {
-      video.srcObject = stream;
-      video.play();
-    })
-    .catch(function(err) {
-      console.log("An error occurred: " + err);
-    });
+  
+      navigator.mediaDevices.getUserMedia({video: {facingMode:'environment'}})
+      .then(mediaStream => {
+        video.srcObject = mediaStream;
+        video.play();
+        const track = mediaStream.getVideoTracks()[0];
+        imageCapture = new ImageCapture(track);
+      })
+      .catch(error => console.log(error));
+    
+      function blobToDataURL(blob) {
+        return new Promise((fulfill, reject) => {
+            let reader = new FileReader();
+            reader.onerror = reject;
+            reader.onload = (e) => fulfill(reader.result);
+            reader.readAsDataURL(blob);
+        })
+    }
 
-    video.addEventListener('canplay', function(ev){
-      if (!streaming) {
-        height = video.videoHeight / (video.videoWidth/width);
+    function onTakePhotoButtonClick() {
+      imageCapture.takePhoto()
+      .then(blob =>  blobToDataURL(blob))
+      .then(dataurl => {
+        console.log(dataurl);
+        imageData = dataurl;
+        photo.setAttribute('src', imageData);
+        
+      })
+      .catch(error => console.log(error));
+    }
+
+
+    // navigator.mediaDevices.getUserMedia({video: {facingMode : 'environment'} , audio: false})
+    // .then(function(stream) {
+    //   video.srcObject = stream;
+    //   video.play();
+    // })
+    // .catch(function(err) {
+    //   console.log("An error occurred: " + err);
+    // });
+
+    // video.addEventListener('canplay', function(ev){
+    //   if (!streaming) {
+    //     height = video.videoHeight / (video.videoWidth/width);
       
-        // Firefox currently has a bug where the height can't be read from
-        // the video, so we will make assumptions if this happens.
+    //     // Firefox currently has a bug where the height can't be read from
+    //     // the video, so we will make assumptions if this happens.
       
-        if (isNaN(height)) {
-          height = width / (4/3);
-        }
+    //     if (isNaN(height)) {
+    //       height = width / (4/3);
+    //     }
       
-        video.setAttribute('width', width);
-        video.setAttribute('height', height);
-        canvas.setAttribute('width', width);
-        canvas.setAttribute('height', height);
-        streaming = true;
-      }
-    }, false);
+    //     video.setAttribute('width', width);
+    //     video.setAttribute('height', height);
+    //     canvas.setAttribute('width', width);
+    //     canvas.setAttribute('height', height);
+    //     streaming = true;
+    //   }
+    // }, false);
 
     startbutton.addEventListener('click', function(ev){
-      takepicture();
+      // takepicture();
+      onTakePhotoButtonClick();
+      
+      $(output).removeClass("hidden");
+      $(camera).addClass("hidden");
       ev.preventDefault();
     }, false);
     
-    clearphoto();
+    // clearphoto();
   }
 
 
@@ -131,7 +167,7 @@ $( document ).ready(function() {
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     var data = canvas.toDataURL('image/png');
-    photo.setAttribute('src', data);
+    photo.setAttribute('src', imageData);
   }
   
   // Capture a photo by fetching the current contents of the video
